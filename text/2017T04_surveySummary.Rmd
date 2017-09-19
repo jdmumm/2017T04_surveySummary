@@ -20,12 +20,13 @@ knitr::opts_chunk$set(echo = FALSE, message=F, warning=F)
 
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_17.csv") %>%
-select(Year = YEAR, Tows = n, 'pre-4 (<66mm)' = P4, 'pre-3 (66-79mm)' = P3, 'pre-2 (80-95mm)' = P2, 'pre-1 (96-113mm)' = P1,
+select(Year = YEAR, Tows = n, 'Pre-4 (<66mm)' = P4, 'Pre-3 (66-79mm)' = P3, 'Pre-2 (80-95mm)' = P2, 'Pre-1 (96-113mm)' = P1,
                   'Legal (>114mm)'= LM_P_, 'Legal CI'= LM_P_CI_, 'Total' = TM_P_, 'Total CI'= TM_P_CI_ ) %>%
 mutate (Year = as.factor(Year)) %>%
 mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) -> LM17
 print(xtable(LM17,
-            caption="Male Tanner crab abundance estimates using the 2017 size class revisions from trawl surveys in the Southern District, 1990-2017.",
+            caption="Male Tanner crab abundance estimates using the 2017 size class revisions from trawl surveys in the Southern District, 1990-2017.
+              No survey was conducted in 2010 and 2014-2016",
             align = "ccccccccccc"),
       floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 
