@@ -17,7 +17,7 @@ options(scipen=9999) # remove scientific notation
 knitr::opts_chunk$set(echo = FALSE, message=F, warning=F)
 ```
 
-Legal Male abundance using the new size classes. 
+
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_17.csv") %>%
 select(Year = YEAR, Tows = n, 'Pre-4 (<66mm)' = P4, 'Pre-3 (66-79mm)' = P3, 'Pre-2 (80-95mm)' = P2, 'Pre-1 (96-113mm)' = P1,
@@ -32,11 +32,11 @@ print(xtable(LM17,
 
 ```   
 
-Legal Male abundance using the old size classes. 
+
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_old.csv") %>%
 select(Year = YEAR, Tows = n, 'Pre-4 (<70mm)' = P4, 'Pre-3 (70-91mm)' = P3, 'Pre-2 (92-114mm)' = P2, 'Pre-1 (115-139mm)' = P1,
-                  'Legal (>404mm)'= LM_P_, 'Legal CI'= LM_P_CI_, 'Total' = TM_P_, 'Total CI'= TM_P_CI_ ) %>%
+                  'Legal (>140mm)'= LM_P_, 'Legal CI'= LM_P_CI_, 'Total' = TM_P_, 'Total CI'= TM_P_CI_ ) %>%
 mutate (Year = as.factor(Year)) %>%
 mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) -> LM17
 print(xtable(LM17,
@@ -45,4 +45,12 @@ print(xtable(LM17,
             align = "ccccccccccc"),
       floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 
+
 ```   
+
+\newpage
+
+
+![Legal male Tanner crab abundance estimates and 95% confidence intervals using the 2017 legal size (114 mm or 4.5 in) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_2017SCs.png)
+
+![Legal male Tanner crab abundance estimates and 95% confidence intervals using the pre-2017 legal size (140 mm or 5.5 in) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_oldSCs.png)
