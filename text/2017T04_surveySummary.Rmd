@@ -15,6 +15,11 @@ options(scipen=9999) # remove scientific notation
 knitr::opts_chunk$set(echo = FALSE, message=F, warning=F)
 ```
 
+Text TEXT 
+
+
+![2017 Kachemak Bay large-mesh trawl survey grid and tow paths.](../figs/2017T04tows_170919.png)
+
 
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_17.csv") %>%
