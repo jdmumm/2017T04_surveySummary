@@ -6,8 +6,6 @@ output:
   pdf_document:
     includes:
       in_header: header.tex
-  html_document: default
-  word_document: default
 ---
 ```{r, echo=FALSE, message=FALSE, warning=F}
 library(knitr)
