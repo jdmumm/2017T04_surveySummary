@@ -25,7 +25,7 @@ select(Year = YEAR, Tows = n, 'pre-4' = P4, 'pre-3' = P3, 'pre-2' = P2, 'pre-1' 
 mutate_all(funs(prettyNum(., big.mark=","))) -> LM17
 print(xtable(LM17,
       caption="Male Tanner crab abundance estimates using the 2017 size class revisions from trawl surveys in the Southern District, 1990-2017."),
-      floating.environment="sidewaystable", comment=FALSE)
+      floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE )
 
 ```   
 
