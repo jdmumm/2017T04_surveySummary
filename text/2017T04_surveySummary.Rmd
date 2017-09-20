@@ -1,7 +1,7 @@
 ---
 title: "2017 Southern District Trawl Survey Summary"
 author: 'Joshua Mumm'      
-date: "September 19, 2017"
+date: "September 20th, 2017"
 output:
   pdf_document:
     includes:
@@ -82,3 +82,4 @@ print(xtable(dung, caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Dis
               align = c('c','c','p{.4in}','p{.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.45in}','p{0.6in}')),
       comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```  
+![Legal male Tanner crab CPUE (crab/nmi) using the new legal size (114 mm) in the 2017 Southern District trawl survey.](../figs/2017T04_LMCPUE_170920.png)
