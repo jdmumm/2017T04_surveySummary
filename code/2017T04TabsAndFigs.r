@@ -81,6 +81,31 @@ dat_old <- read.csv('./data/qP_simp_oldSCs_170916.csv')# using the old pre-2017 
     #         legend = c("Commercial MSST","Noncommercial 5-year threshold", "Noncommercial 1-year threshold", "5-Year average"),
     #         col = c("black","dimgrey","dimgrey", "dimgrey"),
     #         lty = c(5,3,5, NA), pch = c(NA,NA,NA,1), lwd = c(2,1,1,NA), bty = "n", y.intersp =1.2)
+
+  ##########################################################################################################################
+  ##########################################################################################################################
+  ## KING and DUNGY CPUE    ##   from 161104
+  ############################
+
+  ##DUNGIES##
+  dat <- read.csv("./data/qP_910_170920.csv")
   
+  dat <-  dat[c("PROJECT_CODE", "YEAR","n","SM_CBar","SM_varC", "LM_CBar","LM_varC","TM_CBar","TM_varC",
+                "TF_CBar","TF_varC")]
+  
+  ##Calc sample SDs
+  dat$SM_SD <- (dat$SM_varC^.5)
+  dat$LM_SD <- (dat$LM_varC^.5) 
+  dat$TM_SD <- (dat$TM_varC^.5)
+  dat$TF_SD <- (dat$TF_varC^.5)
+  
+  #remove extra cols, reorder and rename 
+  dung_pm <- select(dat,"Proj" = PROJECT_CODE, "Year" = YEAR, n,
+                    SM_CBar, SM_SD, LM_CBar, LM_SD, TM_CBar, TM_SD, TF_CBar, TF_SD)
+  
+  # order by project and year 
+  dung_pm <- arrange(dung_pm, Proj, Year)
+  dung_pm
+  write.csv(dung_pm, "./output/910_pm_170920.csv")
   
   
