@@ -1,7 +1,6 @@
 ---
 title: "2017 Southern District Trawl Survey Summary"
-author: "Josh Mumm ***
-joshua.mumm@alaska.gov"
+author: 'Joshua Mumm'      
 date: "September 19, 2017"
 output:
   pdf_document:
