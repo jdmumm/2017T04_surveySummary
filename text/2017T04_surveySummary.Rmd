@@ -36,6 +36,8 @@ read.csv("../data/ClassLUT_T04931_2017.csv") %>%
         comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```  
 
+\newpage
+
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_17.csv") %>%
 select(Year = YEAR, Tows = n, 'Pre-4 (<66mm)' = P4, 'Pre-3 (66-79mm)' = P3, 'Pre-2 (80-95mm)' = P2, 'Pre-1 (96-113mm)' = P1,
@@ -44,7 +46,7 @@ mutate (Year = as.factor(Year)) %>%
 mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) -> LM17
 print(xtable(LM17,
             caption="Male Tanner crab abundance estimates using the 2017 size class revisions from trawl surveys in the Southern District, 1990-2017.
-              No survey was conducted in 2010 or 2014-2016. Confidence Intervals are at 95%.",
+              No survey was conducted in 2010 or 2014-2016. Confidence intervals are at 95 percent.",
             align = "ccccccccccc"),
       floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```   
@@ -58,7 +60,7 @@ mutate (Year = as.factor(Year)) %>%
 mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) -> LM17
 print(xtable(LM17,
             caption="Male Tanner crab abundance estimates using the pre-2017 size class definitions from trawl surveys in the Southern District, 1990-2017.
-              No survey was conducted in 2010 or 2014-2016. Confidence Intervals are at 95%.",
+              No survey was conducted in 2010 or 2014-2016. Confidence intervals are at 95 percent.",
             align = "ccccccccccc"),
       floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```   
