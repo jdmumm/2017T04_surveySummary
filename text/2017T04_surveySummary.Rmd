@@ -71,3 +71,14 @@ print(xtable(LM17,
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the 2017 legal size (114 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_2017SCs.png)
 
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the pre-2017 legal size (140 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_oldSCs.png)
+
+\newpage
+```{r, results='asis', echo=F}
+read.csv("../output/910_pm_170920.csv") %>%
+  filter (Proj == 'T04') %>% 
+  select('Year' = Year, 'Tows' = n, 'Sublegal Male CPUE'= SM_CBar, 'SD' = SM_SD, 'Legal Male CPUE' = LM_CBar, 'SD' = LM_SD,
+         'Total Male CPUE' = TM_CBar, 'SD' = TM_SD, 'Total Female CPUE' = TF_CBar, 'SD' = TF_SD) -> dung
+print(xtable(dung, caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Distric trawl survey, 1990 to 2017',
+              align = c('c','c','p{.4in}','p{.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.45in}','p{0.6in}')),
+      comment=FALSE, include.rownames = FALSE , caption.placement = "top")
+```  
