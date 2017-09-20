@@ -23,7 +23,7 @@ Using the new legal size (114 mm), 137 legal males were captured in the 2017 sur
 
 Using the old legal size (140 mm), 8 legal males were captured in the 2017 survey.  When analyzed using the old size categories, the 2017 survey produced the lowest legal male abundance estimate on record, 7,078 crab (+/- 8,329) (Table 3; Figure 3).      
    
-Legal Male Dungeness Crab CPUE in the 2017 survey was greater than in 2009 to 2013, but less than all but 2 years prior to 2009 (Table 4).      
+Legal Male Dungeness crab CPUE in the 2017 survey was greater than in 2009 to 2013, but less than all but 2 years prior to 2009 (Table 4).      
 
 \newpage
 
@@ -45,7 +45,7 @@ select(Year = YEAR, Tows = n, 'Pre-4 (<66mm)' = P4, 'Pre-3 (66-79mm)' = P3, 'Pre
 mutate (Year = as.factor(Year)) %>%
 mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) -> LM17
 print(xtable(LM17,
-            caption="Male Tanner crab abundance estimates using the 2017 size class revisions from trawl surveys in the Southern District, 1990-2017.
+            caption="Male Tanner crab abundance estimates using the 2017 size class definitions from trawl surveys in the Southern District, 1990-2017.
               No survey was conducted in 2010 or 2014-2016. Confidence intervals are at 95 percent.",
             align = "ccccccccccc"),
       floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE , caption.placement = "top")
@@ -78,7 +78,7 @@ read.csv("../output/910_pm_170920.csv") %>%
   filter (Proj == 'T04') %>% 
   select('Year' = Year, 'Tows' = n, 'Sublegal Male CPUE'= SM_CBar, 'SD' = SM_SD, 'Legal Male CPUE' = LM_CBar, 'SD' = LM_SD,
          'Total Male CPUE' = TM_CBar, 'SD' = TM_SD, 'Total Female CPUE' = TF_CBar, 'SD' = TF_SD) -> dung
-print(xtable(dung, caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Distric trawl survey, 1990 to 2017',
+print(xtable(dung, caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Distric trawl survey, 1990 to 2017.',
               align = c('c','c','p{.4in}','p{.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.45in}','p{0.6in}')),
       comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```  
