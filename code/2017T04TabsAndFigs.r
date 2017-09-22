@@ -82,10 +82,8 @@ dat_old <- read.csv('./data/qP_simp_oldSCs_170916.csv')# using the old pre-2017 
     #         col = c("black","dimgrey","dimgrey", "dimgrey"),
     #         lty = c(5,3,5, NA), pch = c(NA,NA,NA,1), lwd = c(2,1,1,NA), bty = "n", y.intersp =1.2)
 
-  ##########################################################################################################################
-  ##########################################################################################################################
-  ## KING and DUNGY CPUE    ##   from 161104
-  ############################
+## KING and DUNGY CPUE    ##   from 161104 ----
+ 
 
   ##DUNGIES##
   dat <- read.csv("./data/qP_910_170920.csv")
@@ -108,3 +106,60 @@ dat_old <- read.csv('./data/qP_simp_oldSCs_170916.csv')# using the old pre-2017 
   dung_pm
   write.csv(dung_pm, "./output/910_pm_170920.csv")
 
+## Tanner CH vs CW plot ## ----
+  
+read.csv ("./data/931_CHCW_T04T05T06_usedInEst_90to17.csv") %>% 
+filter(PROJECT_CODE == "T04", YEAR > 2007) -> awl # 2006 had CH too, but excluding to fit on 6 panel plot
+
+yrs <- unique(awl$YEAR)  
+
+par(mfcol=c(3,2))
+par(mar=c(3.1,4.1,1,1))
+par(mgp = c(2, 1,0))
+for (i in yrs)
+  {
+  awl %>% filter (YEAR == i, SEX_CODE == '1') %>%  
+    select(cw = BIOLOGICAL_WIDTH_MM, ch = CHELA_HEIGHT_MM, sc17 = CRAB_SIZE_CLASS_CODE_17) %>% 
+    mutate (cw_ln = log(cw), ch_ln = log(ch), rat = ch_ln/cw_ln) -> len
+  
+  #len %>% filter(cw_ln > 3.8 & cw_ln < 5.2) -> len # exclude few outliers
+  
+  #t <- .62
+  plot (ch_ln ~ cw_ln, data =len, 
+        ylim = c(1.25,3.75),
+        xlim = c(3.75,5.1),
+        cex = .9,
+        col = 'gray20',
+        #col = ifelse(rat < t,'gray60','black'),
+        #pch = ifelse(rat < t,1,4),
+        #cex = ifelse(rat < t,.8,.5),
+        xlab = 'ln(carapace width)', ylab = 'ln(chela height)' )        
+  abline( v = log(114), lwd = 3)
+  abline( v = log(140), lwd = 3, lty ="dotted")
+  
+  # lm(ch_ln ~ cw_ln, len, rat < t) -> lm_s 
+  # lm(ch_ln ~ cw_ln, len, rat > t) -> lm_l
+  # abline(lm_s, col = 'gray60', lty = 'dashed' )
+  # abline(lm_l, col = 'black', lty = 'dashed')
+
+  
+  legend( x=3.8, y=3.7 , bty = 'n', legend = c('114mm CW', '140mm CW'),
+          lwd = c(3,3), lty = c('solid','dotted'))
+  
+  #legend(x = 3.8, y = 3.5, bty = 'n', legend = c('large-claw: ln(ch)/ln(cw) > 0.62', 'small-claw: ln(ch)/ln(cw) < 0.62'),
+        #col = c("black", 'gray60'), pch = c(1,4), pt.cex = c(.8,.5) )       
+  legend('bottomleft', legend = i)
+  }  
+
+  # picking rat threshold    
+  ggplot(aes(rat))+geom_density(alpha=.2)
+    
+  # above plot with only raw data
+  plot (ch_ln ~ cw_ln, data =len, 
+        xlim = c(3.75,5.1),
+        xlab = 'ln(carapace width)', ylab = 'ln(chela height)' )        
+  abline( v = log(114), lwd = 3)
+  abline( v = log(140), lwd = 3, lty ="dotted")
+  -
+    -      legend( x=3.8, y=3.7 , bty = 'n', legend = c('114mm CW', '140mm CW'),
+                   -              lwd = c(3,3), lty = c('solid','dotted'))
