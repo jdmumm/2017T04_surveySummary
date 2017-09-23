@@ -23,8 +23,7 @@ select(Project = FK_PROJECT_CODE, Event = EVENT_ID, species=SPECIES_CODE,
 
 ## ESTIMATE CATCH BY TOW, then CPUE, and aggregate by Bed ##############################
 
-s <- '270' # Tanners for now
-
+s <- '250' # Species of interest
 # aggregate sampled catch and species of interest 
 catch %>% group_by(Event) %>% 
   summarise(#t1 = sum(sample_wt[species == 99997 & sample_type == 1]),
@@ -40,24 +39,38 @@ catch %>% group_by(Event) %>%
   mutate ( sTot = s1 + s2 + if_else(t2>0, (t1*s2/t2), 0), #expanded catch of species s by event.  Con to prevent div by 0.
            sCPM = sTot/length)  %>%                    # CPUE cnt/nmi 
   # aggregate by year     
-  group_by(year) %>% summarise ( cpue_mean = mean(sCPM), 
+  group_by(year) %>% summarise (tows =  n(),
+                                cpue_mean = mean(sCPM), 
                                 cpue_sd = sqrt(var(sCPM)), 
                                 cpue_cv = 100 * cpue_sd/cpue_mean,
-                                totCatch = sum(sTot)) ->  cpm_270
+                                totCatch = sum(sTot)) ->  cpm # append species code to output manually 
 cpm # CPUE (kg/nmi) with sd, cv and total expanded catch (cnt) by bed, all for sp. s.     
 
 write.csv(cpm_250, './output/cpm_250.csv')
-write.csv(cpm_710, './output/cpm_250.csv')
-write.csv(cpm_270, './output/cpm_250.csv')
+write.csv(cpm_710, './output/cpm_710.csv')
+write.csv(cpm_270, './output/cpm_270.csv')
 
-par(mfrow = c(1,1))
-plotCI(cpm_250$year, cpm_250$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
-       ui = cpm_250$cpue_mean + cpm_250$cpue_sd,
-       li = cpm_250$cpue_mean - cpm_250$cpue_sd)
-       #ylim = c(0,2950)
-       )
-mtext("Year", side = 1, line = 2,font=2, cex= 1.16)
-axis(side=1, at=seq(1990, 2017, by=1, las = '1', font = 2))
-axis(side=2, at = seq(0, 2950, by=500, font = 2),
-     labels=formatC(seq(0, 2950, by=500),"d", big.mark=','))
-minor.tick(ny = 5, nx = 0 )
+par(mfrow = c(3,1))
+par(mar=c(3.1,4.1,2,1))
+par(mgp = c(2, 1,0))
+
+dat <- cpm_250
+plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
+       ui = dat$cpue_mean + dat$cpue_sd,
+       li = ifelse((dat$cpue_mean - dat$cpue_sd) > 0 , (dat$cpue_mean - dat$cpue_sd), 0),
+       xlim = c(1998,2017), 
+       ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Pacific Tomcod')
+       
+dat <- cpm_710
+plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
+       ui = dat$cpue_mean + dat$cpue_sd,
+       li = ifelse((dat$cpue_mean - dat$cpue_sd) > 0 , (dat$cpue_mean - dat$cpue_sd), 0),
+       xlim = c(1998,2017), 
+       ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Sablefish')
+
+dat <- cpm_270
+plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
+       ui = dat$cpue_mean + dat$cpue_sd,
+       li = ifelse((dat$cpue_mean - dat$cpue_sd) > 0 , (dat$cpue_mean - dat$cpue_sd), 0),
+       xlim = c(1998,2017), 
+       ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Walleye Pollock')
