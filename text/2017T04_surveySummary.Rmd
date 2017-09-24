@@ -1,7 +1,7 @@
 ---
 title: "2017 Southern District Trawl Survey Summary"
 author: 'Joshua Mumm'      
-date: "September 20th, 2017"
+date: "September 24th, 2017"
 output:
   pdf_document:
     includes:
@@ -93,6 +93,24 @@ column_spec(9, width = "4.6em") %>%
 column_spec(10, width = "3.9em")
 ```  
 
+```{r, results='asis', echo=F}
+read.csv("../output/931PopFems_Main.csv") %>%
+  select(Year = year, Tows = tows, 'Juvenile' = FT11_P_, '95% CI' = FT11_P_CI_,
+         'Abund.' = MF_P_, '95% CI ' = MF_P_CI_, 
+         'Abund. ' =TF_P_, '95% CI  ' = TF_P_CI_) %>%
+         
+  mutate (Year = as.factor(Year)) %>%
+  mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) %>%
+  mutate (Year = as.numeric(as.character(Year))) %>%
+  add_row(Year = c(2010,2014:2016), 'Abund.' = rep('No Survey',4)) %>%
+  mutate_all(funs(replace(., is.na(.), '-'))) %>%
+  arrange(Year) -> fem
+
+kable(fem, format = "latex", booktabs = T, align = 'r',
+      caption="Female Tanner crab abundance estimates from trawl surveys in the Southern District, 1990-2017.") %>%
+  kable_styling() %>%
+  add_header_above(c(" " = 2, "Juvenile" = 2, "Mature" = 2, "Total Females" = 2))
+```
 
 \pagebreak
 \newpage
