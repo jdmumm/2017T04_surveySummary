@@ -24,7 +24,7 @@ select(Project = FK_PROJECT_CODE, Event = EVENT_ID, species=SPECIES_CODE,
 
 ## ESTIMATE CATCH BY TOW, then CPUE, and aggregate by Bed ----
 
-s <- '270' # Species of interest
+s <- '250' # Species of interest
 # aggregate sampled catch and species of interest 
 catch %>% group_by(Event) %>% 
   summarise(#t1 = sum(sample_wt[species == 99997 & sample_type == 1]),
@@ -39,9 +39,9 @@ catch %>% group_by(Event) %>%
   replace_na (list(t1 = 0, t2 = 0, s1 = 0, s2 = 0)) %>%
   # expand any T2's, sum components of catch, and calc CPUE   
   mutate ( sTot = s1 + s2 + if_else(t2>0, (t1*s2/t2), 0), #expanded catch of species s by event.  Con to prevent div by 0.
-           sCPM = sTot/length)  %>%              # CPUE cnt/nmi 
+           sCPM = sTot/length)  -> cpm_bytow_250          # CPUE cnt/nmi 
   # aggregate by year     
-  group_by(year) %>% summarise (tows =  n(),
+  cpm_bytow_250 -> group_by(year) %>% summarise (tows =  n(),
                                 cpue_mean = mean(sCPM), 
                                 cpue_sd = sqrt(var(sCPM)), 
                                 cpue_cv = 100 * cpue_sd/cpue_mean,
@@ -51,6 +51,10 @@ cpm_byYear # CPUE (kg/nmi) with sd, cv and total expanded catch (cnt) by bed, al
 write.csv(cpm_byYear_250, './output/cpm_byYear_250.csv')
 write.csv(cpm_byYear_710, './output/cpm_byYear_710.csv')
 write.csv(cpm_byYear_270, './output/cpm_byYear_270.csv')
+
+write.csv(cpm_bytow_250, './output/cpm_byTow_250.csv')
+write.csv(cpm_bytow_710, './output/cpm_byTow_710.csv')
+write.csv(cpm_bytow_270, './output/cpm_byTow_270.csv')
 
 ## Plot cpm mean and SD ---- 
 par(mfrow = c(3,1))
