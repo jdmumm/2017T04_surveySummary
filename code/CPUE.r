@@ -56,6 +56,9 @@ write.csv(cpm_bytow_250, './output/cpm_byTow_250.csv')
 write.csv(cpm_bytow_710, './output/cpm_byTow_710.csv')
 write.csv(cpm_bytow_270, './output/cpm_byTow_270.csv')
 
+############################################################################## #
+## PLOTS ##
+
 ## Plot cpm mean and SD ---- 
 par(mfrow = c(3,1))
 par(mar=c(3.1,4.1,2,1))
@@ -82,3 +85,70 @@ plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
        xlim = c(1998,2017),
        ylim = c (0,800),
        ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Walleye Pollock')
+
+## Plot cpm mean and SE ---- 
+read.csv('./output/cpm_byYear_250.csv')%>%
+  filter (year > 1997) %>% mutate (se = cpue_sd/(tows^.5)) -> cpm_byYear_250
+read.csv('./output/cpm_byYear_710.csv')%>%
+  filter (year > 1997) %>% mutate (se = cpue_sd/(tows^.5)) -> cpm_byYear_710
+read.csv('./output/cpm_byYear_270.csv')%>%
+  filter (year > 1997) %>% mutate (se = cpue_sd/(tows^.5)) -> cpm_byYear_270
+
+par(mfrow = c(3,1))
+par(mar=c(3.1,4.1,2,1))
+par(mgp = c(2, 1,0))
+
+dat <- cpm_byYear_250
+plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
+       ui = dat$cpue_mean + dat$se,
+       li = dat$cpue_mean - dat$se,
+       xlim = c(1998,2017), 
+       ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Pacific Tomcod')
+
+dat <- cpm_byYear_710
+plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
+       ui = dat$cpue_mean + dat$se,
+       li = dat$cpue_mean - dat$se,
+       xlim = c(1998,2017), 
+       ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Sablefish')
+
+dat <- cpm_byYear_270
+plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
+       ui = dat$cpue_mean + dat$se,
+       li = dat$cpue_mean - dat$se,
+       xlim = c(1998,2017),
+       ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Walleye Pollock')
+
+## PLOT cpm BOX PLOTS ----
+
+read.csv('./output/cpm_byTow_250.csv')%>%
+  filter (year > 1997) %>% mutate (Year = as.factor(year)) -> cpm_bytow_250
+read.csv('./output/cpm_byTow_710.csv') %>% 
+  filter (year > 1997) %>% mutate (Year = as.factor(year))-> cpm_bytow_710
+read.csv('./output/cpm_byTow_270.csv') %>% 
+  filter (year > 1997) %>% mutate (Year = as.factor(year))-> cpm_bytow_270
+
+  ## with outliers 
+  ggplot (data = cpm_bytow_250, aes(x=Year, y = sCPM),  ylim = c(0, 150)) %>%
+    + geom_boxplot( ) 
+  
+  ggplot (data = cpm_bytow_710, aes(x=Year, y = sCPM),  ylim = c(0, 150)) %>%
+    + geom_boxplot() 
+  
+  ggplot (data = cpm_bytow_270, aes(x=Year, y = sCPM),  ylim = c(0, 150)) %>%
+    + geom_boxplot() 
+  
+  ## w/out outliers
+  ggplot (data = cpm_bytow_250, aes(x=Year, y = sCPM),  ylim = c(0, 150)) %>%
+    + geom_boxplot( outlier.shape = NA) %>%
+    + ylim (c(0,150))
+  
+  ggplot (data = cpm_bytow_710, aes(x=Year, y = sCPM),  ylim = c(0, 150)) %>%
+    + geom_boxplot( outlier.shape = NA) %>%
+    + ylim (c(0,20))
+  
+  ggplot (data = cpm_bytow_270, aes(x=Year, y = sCPM),  ylim = c(0, 150)) %>%
+    + geom_boxplot( outlier.shape = NA) %>%
+    + ylim (c(0,500))
+
+
