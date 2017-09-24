@@ -1,11 +1,12 @@
 ## ###################
 #    CPUE           ##
 ######################
+# Calc CPUE, including expanding subsamples
+# Used here mostly for quick look at Pollock, Tomcod, and Sablefish. 
+
+## LOAD ----
 library (tidyverse)
 library(plotrix)
-
-## LOAD DATA ##########################################################################
-
 events <- read.csv('./data/events.csv')
 events %>% filter (USED_IN_ESTIMATE == 'YES', PROJECT_CODE == 'T04') %>%
   select( Event = EVENT_ID,
@@ -21,9 +22,9 @@ select(Project = FK_PROJECT_CODE, Event = EVENT_ID, species=SPECIES_CODE,
                  wt=SAMPLE_WT_KG, 
                  sample_type = SAMPLE_TYPE) %>% filter(Event %in% event$Event) -> catch
 
-## ESTIMATE CATCH BY TOW, then CPUE, and aggregate by Bed ##############################
+## ESTIMATE CATCH BY TOW, then CPUE, and aggregate by Bed ----
 
-s <- '250' # Species of interest
+s <- '270' # Species of interest
 # aggregate sampled catch and species of interest 
 catch %>% group_by(Event) %>% 
   summarise(#t1 = sum(sample_wt[species == 99997 & sample_type == 1]),
@@ -34,43 +35,46 @@ catch %>% group_by(Event) %>%
   # join to event for totCatch,length and set any events with no catch to 0. 
   right_join (select( event, Event,year, totCatch, length)) %>%
   mutate (t1 = totCatch -totSamp) %>%
+  mutate (t1 = if_else( t1 < 0, 0, t1)) %>%  # Bandaid to set tows with neg remaining catch to 0
   replace_na (list(t1 = 0, t2 = 0, s1 = 0, s2 = 0)) %>%
   # expand any T2's, sum components of catch, and calc CPUE   
   mutate ( sTot = s1 + s2 + if_else(t2>0, (t1*s2/t2), 0), #expanded catch of species s by event.  Con to prevent div by 0.
-           sCPM = sTot/length)  %>%                    # CPUE cnt/nmi 
+           sCPM = sTot/length)  %>%              # CPUE cnt/nmi 
   # aggregate by year     
   group_by(year) %>% summarise (tows =  n(),
                                 cpue_mean = mean(sCPM), 
                                 cpue_sd = sqrt(var(sCPM)), 
                                 cpue_cv = 100 * cpue_sd/cpue_mean,
-                                totCatch = sum(sTot)) ->  cpm # append species code to output manually 
-cpm # CPUE (kg/nmi) with sd, cv and total expanded catch (cnt) by bed, all for sp. s.     
+                                totCatch = sum(sTot)) ->  cpm_byYear # append species code to output manually 
+cpm_byYear # CPUE (kg/nmi) with sd, cv and total expanded catch (cnt) by bed, all for sp. s.     
 
-write.csv(cpm_250, './output/cpm_250.csv')
-write.csv(cpm_710, './output/cpm_710.csv')
-write.csv(cpm_270, './output/cpm_270.csv')
+write.csv(cpm_byYear_250, './output/cpm_byYear_250.csv')
+write.csv(cpm_byYear_710, './output/cpm_byYear_710.csv')
+write.csv(cpm_byYear_270, './output/cpm_byYear_270.csv')
 
+## Plot cpm as CI ---- 
 par(mfrow = c(3,1))
 par(mar=c(3.1,4.1,2,1))
 par(mgp = c(2, 1,0))
 
-dat <- cpm_250
+dat <- cpm_byYear_250
 plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
        ui = dat$cpue_mean + dat$cpue_sd,
        li = ifelse((dat$cpue_mean - dat$cpue_sd) > 0 , (dat$cpue_mean - dat$cpue_sd), 0),
        xlim = c(1998,2017), 
        ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Pacific Tomcod')
-       
-dat <- cpm_710
+    
+dat <- cpm_byYear_710
 plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
        ui = dat$cpue_mean + dat$cpue_sd,
        li = ifelse((dat$cpue_mean - dat$cpue_sd) > 0 , (dat$cpue_mean - dat$cpue_sd), 0),
        xlim = c(1998,2017), 
        ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Sablefish')
 
-dat <- cpm_270
+dat <- cpm_byYear_270
 plotCI(dat$year, dat$cpue_mean, col= "black", lwd=1,  pch= 19, cex = 1.0,
        ui = dat$cpue_mean + dat$cpue_sd,
        li = ifelse((dat$cpue_mean - dat$cpue_sd) > 0 , (dat$cpue_mean - dat$cpue_sd), 0),
-       xlim = c(1998,2017), 
+       xlim = c(1998,2017),
+       ylim = c (0,800),
        ylab = 'CPUE (kg/nmi)', xlab = 'Year', main = 'Walleye Pollock')
