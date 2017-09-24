@@ -24,11 +24,18 @@ Using the new legal size (114 mm), 137 legal males were captured in the 2017 sur
 
 Using the old legal size (140 mm), 8 legal males were captured in the 2017 survey.  When analyzed using the old size categories, the 2017 survey produced the lowest legal male abundance estimate on record, 7,078 crab (+/- 8,329) (Table 3; Figure 3).      
 
-Male Tanners, especially large males were concentrated in the deep trench north of Gull Island and Anisom Point (Figures 4 and 5). 
+Male Tanners, especially large males were concentrated in the trench north of Gull Island and Anisom Point (Figures 4 and 5). 
    
-Legal male Dungeness crab CPUE in the 2017 survey was greater than in 2009 to 2013, but less than all but 2 years prior to 2009 (Table 4).      
+Legal male Dungeness crab CPUE in the 2017 survey was greater than in 2009 to 2013, but less than all but 2 years prior to 2009 (Table 4).
+
+
+
+
+
+
 
 ![2017 Southern District large-mesh trawl survey grid and tow paths.](../figs/2017T04tows_170919.png)
+
 
 ```{r, results='asis', echo=F}
 read.csv("../data/ClassLUT_T04931_2017.csv") %>%
@@ -38,6 +45,7 @@ read.csv("../data/ClassLUT_T04931_2017.csv") %>%
 ```  
 
 
+\newpage
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_17.csv") %>%
     select(Year = YEAR, Tows = n, 'Pre-4 (<66)' = P4, 'Pre-3 (66-79)' = P3,
@@ -60,9 +68,7 @@ column_spec(7, width = "4.5em") %>%
 column_spec(8, width = "3.9em") %>%
 column_spec(9, width = "4.6em") %>%
 column_spec(10, width = "3.9em")
-```  
 
-```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_old.csv") %>%
     select(Year = YEAR, Tows = n, 'Pre-4 (<70)' = P4, 'Pre-3 (70-91)' = P3,
            'Pre-2 (92-114)' = P2, 'Pre-1     (115-139)' = P1,
@@ -88,13 +94,20 @@ column_spec(10, width = "3.9em")
 ```  
 
 
+\pagebreak
+\newpage
+
+
+
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the 2017 legal size (114 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_2017SCs.png)
 
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the pre-2017 legal size (140 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_oldSCs.png)
 
+
 ![Legal male Tanner crab CPUE (crab/nmi) using the new legal size (114 mm) in the 2017 Southern District trawl survey.](../figs/2017T04_LMCPUE_170920.png)
 
 ![Total male Tanner crab CPUE (crab/nmi) in the 2017 Southern District trawl survey.](../figs/2017T04_TMCPUE_170920.png)
+
 
 ```{r, results='asis', echo=F}
 read.csv("../output/910_pm_170920.csv") %>%
