@@ -52,7 +52,7 @@ write.csv(cpm_byYear_250, './output/cpm_byYear_250.csv')
 write.csv(cpm_byYear_710, './output/cpm_byYear_710.csv')
 write.csv(cpm_byYear_270, './output/cpm_byYear_270.csv')
 
-## Plot cpm as CI ---- 
+## Plot cpm mean and SD ---- 
 par(mfrow = c(3,1))
 par(mar=c(3.1,4.1,2,1))
 par(mgp = c(2, 1,0))
