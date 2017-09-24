@@ -11,6 +11,7 @@ output:
 library(knitr)
 library(xtable)
 library(tidyverse)
+library(kableExtra)
 options(scipen=9999) # remove scientific notation
 knitr::opts_chunk$set(echo = FALSE, message=F, warning=F)
 ```
@@ -27,8 +28,6 @@ Male Tanners, especially large males were concentrated in the deep trench north 
    
 Legal male Dungeness crab CPUE in the 2017 survey was greater than in 2009 to 2013, but less than all but 2 years prior to 2009 (Table 4).      
 
-\newpage
-
 ![2017 Southern District large-mesh trawl survey grid and tow paths.](../figs/2017T04tows_170919.png)
 
 ```{r, results='asis', echo=F}
@@ -38,48 +37,65 @@ read.csv("../data/ClassLUT_T04931_2017.csv") %>%
         comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```  
 
-\newpage
 
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_17.csv") %>%
-select(Year = YEAR, Tows = n, 'Pre-4 (<66mm)' = P4, 'Pre-3 (66-79mm)' = P3, 'Pre-2 (80-95mm)' = P2, 'Pre-1 (96-113mm)' = P1,
-                  'Legal (>114mm)'= LM_P_, 'Legal CI'= LM_P_CI_, 'Total' = TM_P_, 'Total CI'= TM_P_CI_ ) %>%
-mutate (Year = as.factor(Year)) %>%
-mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) -> LM17
-print(xtable(LM17,
-            caption="Male Tanner crab abundance estimates using the 2017 size class definitions from trawl surveys in the Southern District, 1990-2017.
-              No survey was conducted in 2010 or 2014-2016. Confidence intervals are at 95 percent.",
-            align = "ccccccccccc"),
-      floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE , caption.placement = "top")
-```   
+    select(Year = YEAR, Tows = n, 'Pre-4 (<66)' = P4, 'Pre-3 (66-79)' = P3,
+           'Pre-2 (80-95)' = P2, 'Pre-1 (96-113)' = P1,
+           'Abund. (>114)'= LM_P_, '95% CI'= LM_P_CI_, 'Abund.' = TM_P_, '95% CI '= TM_P_CI_ ) %>%
+    mutate (Year = as.factor(Year)) %>%
+    mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) %>%
+    mutate (Year = as.numeric(as.character(Year))) %>%
+    add_row(Year = c(2010,2014:2016), 'Pre-1 (96-113)' = rep('No_Survey',4)) %>%
+    mutate_all(funs(replace(., is.na(.), '-'))) %>%
+    arrange(Year) -> LM17
 
+kable(LM17, format = "latex", booktabs = T, align = 'r',
+      caption="Male Tanner crab abundance estimates using the 2017 size class definitions from trawl surveys in the Southern District, 1990-2017. Parenthetical size limits are carapace width in millimeters.") %>%
+kable_styling() %>%
+add_header_above(c(" " = 2, "Pre-Recruits" = 4, "Legal Males" = 2, "Total Males" = 2))%>%
+column_spec(1:2, width = "1.3em") %>%
+column_spec(3:6, width = "3.9em")%>%
+column_spec(7, width = "4.5em") %>%
+column_spec(8, width = "3.9em") %>%
+column_spec(9, width = "4.6em") %>%
+column_spec(10, width = "3.9em")
+```  
 
 ```{r, results='asis', echo=F}
 read.csv("../output/931PopMales_Main_old.csv") %>%
-select(Year = YEAR, Tows = n, 'Pre-4 (<70mm)' = P4, 'Pre-3 (70-91mm)' = P3, 'Pre-2 (92-114mm)' = P2, 'Pre-1 (115-139mm)' = P1,
-                  'Legal (>140mm)'= LM_P_, 'Legal CI'= LM_P_CI_, 'Total' = TM_P_, 'Total CI'= TM_P_CI_ ) %>%
-mutate (Year = as.factor(Year)) %>%
-mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) -> LM17
-print(xtable(LM17,
-            caption="Male Tanner crab abundance estimates using the pre-2017 size class definitions from trawl surveys in the Southern District, 1990-2017.
-              No survey was conducted in 2010 or 2014-2016. Confidence intervals are at 95 percent.",
-            align = "ccccccccccc"),
-      floating.environment="sidewaystable", comment=FALSE, include.rownames = FALSE , caption.placement = "top")
-```   
+    select(Year = YEAR, Tows = n, 'Pre-4 (<70)' = P4, 'Pre-3 (70-91)' = P3,
+           'Pre-2 (92-114)' = P2, 'Pre-1     (115-139)' = P1,
+           'Abund. (>140)'= LM_P_, '95% CI'= LM_P_CI_, 'Abund.' = TM_P_, '95% CI '= TM_P_CI_ ) %>%
+    mutate (Year = as.factor(Year)) %>%
+    mutate_if(is.numeric,funs(prettyNum(., big.mark=","))) %>%
+    mutate (Year = as.numeric(as.character(Year))) %>%
+    add_row(Year = c(2010,2014:2016), 'Pre-1     (115-139)' = rep('No_Survey',4)) %>%
+    mutate_all(funs(replace(., is.na(.), '-'))) %>%
+    arrange(Year) -> LM17
 
-\newpage
+kable(LM17, format = "latex", booktabs = T, align = 'r',
+      caption="Male Tanner crab abundance estimates using the pre-2017 size class definitions from trawl surveys in the Southern District, 1990-2017. Parenthetical size limits are carapace width in millimeters.") %>%
+kable_styling() %>%
+add_header_above(c(" " = 2, "Pre-Recruits" = 4, "Legal Males" = 2, "Total Males" = 2))%>%
+column_spec(1:2, width = "1.3em") %>%
+column_spec(3:5, width = "3.9em")%>%
+column_spec(6, width = "4em") %>%
+column_spec(7, width = "4.5em") %>%
+column_spec(8, width = "3.9em") %>%
+column_spec(9, width = "4.6em") %>%
+column_spec(10, width = "3.9em")
+```  
 
 
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the 2017 legal size (114 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_2017SCs.png)
 
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the pre-2017 legal size (140 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_oldSCs.png)
 
-
 ![Legal male Tanner crab CPUE (crab/nmi) using the new legal size (114 mm) in the 2017 Southern District trawl survey.](../figs/2017T04_LMCPUE_170920.png)
 
 ![Total male Tanner crab CPUE (crab/nmi) in the 2017 Southern District trawl survey.](../figs/2017T04_TMCPUE_170920.png)
 
-\newpage
 ```{r, results='asis', echo=F}
 read.csv("../output/910_pm_170920.csv") %>%
   filter (Proj == 'T04') %>% 
@@ -88,4 +104,4 @@ read.csv("../output/910_pm_170920.csv") %>%
 print(xtable(dung, caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Distric trawl survey, 1990 to 2017.',
               align = c('c','c','p{.4in}','p{.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.45in}','p{0.6in}')),
       comment=FALSE, include.rownames = FALSE , caption.placement = "top")
-```  
+```
