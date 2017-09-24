@@ -103,11 +103,11 @@ column_spec(10, width = "3.9em")
 
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the pre-2017 legal size (140 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_oldSCs.png)
 
-
 ![Legal male Tanner crab CPUE (crab/nmi) using the new legal size (114 mm) in the 2017 Southern District trawl survey.](../figs/2017T04_LMCPUE_170920.png)
 
 ![Total male Tanner crab CPUE (crab/nmi) in the 2017 Southern District trawl survey.](../figs/2017T04_TMCPUE_170920.png)
 
+![Chela height vs carapace width of male Tanner crab captured in the Southern District trawl survey, 2008-2017.](../figs/CHvsCW_931T04_2008to17_raw.png)
 
 ```{r, results='asis', echo=F}
 read.csv("../output/910_pm_170920.csv") %>%
@@ -118,3 +118,5 @@ print(xtable(dung, caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Dis
               align = c('c','c','p{.4in}','p{.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.45in}','p{0.6in}')),
       comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```
+
+![Tomcod, sablefish, and pollock CPUE (kg/nmi) in the Southern District trawl survey, 1998-2017.  Error bars are standard errors.](../figs/tomSablePollock_T04CPUE_SE_98to17.png)

@@ -129,13 +129,13 @@ for (i in yrs)
         ylim = c(1.25,3.75),
         xlim = c(3.75,5.1),
         cex = .9,
-        col = 'gray20',
+        #col = 'gray20',
         #col = ifelse(rat < t,'gray60','black'),
         #pch = ifelse(rat < t,1,4),
         #cex = ifelse(rat < t,.8,.5),
         xlab = 'ln(carapace width)', ylab = 'ln(chela height)' )        
-  abline( v = log(114), lwd = 3)
-  abline( v = log(140), lwd = 3, lty ="dotted")
+  abline( v = log(114), lwd = 3, col = 'gray20')
+  abline( v = log(140), lwd = 3, lty ="dotted", col = 'gray20')
   
   # lm(ch_ln ~ cw_ln, len, rat < t) -> lm_s 
   # lm(ch_ln ~ cw_ln, len, rat > t) -> lm_l
@@ -144,7 +144,7 @@ for (i in yrs)
 
   
   legend( x=3.8, y=3.7 , bty = 'n', legend = c('114mm CW', '140mm CW'),
-          lwd = c(3,3), lty = c('solid','dotted'))
+          lwd = c(3,3), lty = c('solid','dotted'), col =c('gray20','gray20'))
   
   #legend(x = 3.8, y = 3.5, bty = 'n', legend = c('large-claw: ln(ch)/ln(cw) > 0.62', 'small-claw: ln(ch)/ln(cw) < 0.62'),
         #col = c("black", 'gray60'), pch = c(1,4), pt.cex = c(.8,.5) )       
