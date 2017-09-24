@@ -34,7 +34,12 @@ dat_old <- read.csv('./data/qP_simp_oldSCs_170916.csv')# using the old pre-2017 
   m <- m[,c(1,2,3,9,8,11,10,4:7)]
   m
  # write.csv(m,'./output/931PopMales_Main_old.csv')
- #################################################################################
+
+#Females Main ----
+dat_17 %>% filter (PROJECT_CODE == 'T04') %>% select(year = YEAR,
+                    FT11_P_, FT11_P_CI_, MF_P_, MF_P_CI_, TF_P_, TF_P_CI_) -> f
+  
+  write.csv(f,'./output/931PopFems_Main.csv')
 
 ##Plot LM ---- 
   
