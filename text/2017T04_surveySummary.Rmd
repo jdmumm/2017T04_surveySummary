@@ -6,6 +6,8 @@ output:
   pdf_document:
     includes:
       in_header: header.tex
+    toc: false
+    
 ---
 ```{r, echo=FALSE, message=FALSE, warning=F}
 library(knitr)
@@ -26,16 +28,19 @@ Using the old legal size (140 mm), 8 legal males were captured in the 2017 surve
 
 Male Tanners, especially large males were concentrated in the trench north of Gull Island and Anisom Point (Figures 4 and 5). 
    
-Legal male Dungeness crab CPUE in the 2017 survey was the greatest since 2008, but less than all but 2 prior years (Table 4).
+Legal male Dungeness crab CPUE in the 2017 survey was the greatest since 2008, but less than all but 2 prior years (Table 6).
 
-Pollock, tomcod and especially sablefish were all more abundant in this year's survey than in any previous year (Figure 7).  Sablefish CPUE this year was more than twice that of any other year.  Despite field impressions, tomcod CPUE was only slightly greater than in 2008.
+Pollock, tomcod and especially sablefish CPUE were all at record highs this year (Figure 7).  Sablefish CPUE this year was more than twice that of any other year.  
 
-
-
-
+\newpage
+\listoftables
+\listoffigures
 
 ![2017 Southern District large-mesh trawl survey grid and tow paths.](../figs/2017T04tows_170919.png)
 
+\hfill\break
+\hfill\break
+\hfill\break
 
 ```{r, results='asis', echo=F}
 read.csv("../data/ClassLUT_T04931_2017.csv") %>%
