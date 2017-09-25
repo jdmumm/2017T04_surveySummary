@@ -66,7 +66,7 @@ read.csv('./data/C_17_170921.csv') %>%
     JuvFems = FT11_T,
     MatFems_n = FT12_T,
     MatFems_o = FT13_T,
-    TotFems = TF_T) %>% mutate_if(is.numeric, funs(round(., 2))) -> c
+    TotFems = TF_T) %>% mutate_if(is.numeric, funs(round(., 1))) -> c
 
 write.csv(c,'./output/2017T04_931CatchByStation_17sc.csv') 
 # previously a version of this from SQL, emailed to KG. There n and o's combined.  
