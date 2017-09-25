@@ -40,7 +40,7 @@ Pollock, tomcod and especially sablefish were all more abundant in this year's s
 ```{r, results='asis', echo=F}
 read.csv("../data/ClassLUT_T04931_2017.csv") %>%
  select('Recruit category' = Recruit.category, 'pre-2017'= pre.2017, '2017' = X2017) -> LUT
-  print(xtable(LUT, caption = 'Male Tanner crab carapace width (mm) by recruit category for the Southern Distric trawl surveys.'),
+  print(xtable(LUT, caption = 'Male Tanner crab recruit class size definitions (carapace width in millimeters) used in the Southern District trawl surveys.'),
         comment=FALSE, include.rownames = FALSE , caption.placement = "top")
 ```  
 
@@ -127,7 +127,7 @@ read.csv("../output/2017T04_931CatchByStation_17sc.csv", colClasses=rep("charact
     'Total' = TotMales, 'Juvenile' = JuvFems, 'Mature' = MatFems,
     'Total ' = TotFems) %>%
 kable( format = "latex", booktabs = T, align = 'r',
-    caption="Number of Tanner crab by 2017 recruit caught in the 2017 Southern District trawl survey.") %>%
+    caption="Number of Tanner crab caught in the 2017 Southern District trawl survey categorized using the 2017 size classes.") %>%
 kable_styling() %>%
 add_header_above(c(" " = 1, "Sublegal" = 4, "Legal" = 2)) %>%
 add_header_above(c(" " = 1, "Males" = 7, "Females" = 3))
