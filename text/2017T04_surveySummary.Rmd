@@ -1,7 +1,7 @@
 ---
 title: "2017 Southern District Trawl Survey Summary"
 author: 'Joshua Mumm'      
-date: "September 24th, 2017"
+date: "September 25th, 2017"
 output:
   pdf_document:
     includes:
@@ -121,6 +121,18 @@ kable(fem, format = "latex", booktabs = T, align = 'r',
 
 ![Legal male Tanner crab abundance estimates and 95% confidence intervals using the pre-2017 legal size (140 mm) from trawl surveys in the Southern District, 1990-2017.](../figs/T04LM_oldSCs.png)
 
+```{r, results='asis', echo=F}
+read.csv("../output/2017T04_931CatchByStation_17sc.csv", colClasses=rep("character"),11) %>% 
+  select(Station, 'Pre-4' = Pre4, 'Pre-3' = Pre3, 'Pre-2' = Pre2, 'Pre-1' = Pre1, Recruit, 'Post-Rec.' = Post,
+    'Total' = TotMales, 'Juvenile' = JuvFems, 'Mature' = MatFems,
+    'Total ' = TotFems) %>%
+kable( format = "latex", booktabs = T, align = 'r',
+    caption="Number of Tanner crab by 2017 recruit caught in the 2017 Southern District trawl survey.") %>%
+kable_styling() %>%
+add_header_above(c(" " = 1, "Sublegal" = 4, "Legal" = 2)) %>%
+add_header_above(c(" " = 1, "Males" = 7, "Females" = 3))
+```
+
 ![Legal male Tanner crab CPUE (crab/nmi) using the new legal size (114 mm) in the 2017 Southern District trawl survey.](../figs/2017T04_LMCPUE_170920.png)
 
 ![Total male Tanner crab CPUE (crab/nmi) in the 2017 Southern District trawl survey.](../figs/2017T04_TMCPUE_170920.png)
@@ -130,11 +142,16 @@ kable(fem, format = "latex", booktabs = T, align = 'r',
 ```{r, results='asis', echo=F}
 read.csv("../output/910_pm_170920.csv") %>%
   filter (Proj == 'T04') %>% 
-  select('Year' = Year, 'Tows' = n, 'Sublegal Male CPUE'= SM_CBar, 'SD' = SM_SD, 'Legal Male CPUE' = LM_CBar, 'SD' = LM_SD,
-         'Total Male CPUE' = TM_CBar, 'SD' = TM_SD, 'Total Female CPUE' = TF_CBar, 'SD' = TF_SD) -> dung
-print(xtable(dung, caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Distric trawl survey, 1990 to 2017.',
-              align = c('c','c','p{.4in}','p{.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.4in}','p{0.6in}','p{0.45in}','p{0.6in}')),
-      comment=FALSE, include.rownames = FALSE , caption.placement = "top")
+  select('Year' = Year, 'Tows' = n, 'CPUE'= SM_CBar, 'SD' = SM_SD, 'CPUE ' = LM_CBar, 'SD ' = LM_SD,
+         'CPUE  ' = TM_CBar, 'SD  ' = TM_SD, 'CPUE     ' = TF_CBar, 'SD     ' = TF_SD) %>% mutate_all(funs(round(.,2))) %>%
+  add_row(Year = c(2010,2014:2016), 'CPUE' = rep('No Survey',4)) %>%
+  mutate_all(funs(replace(., is.na(.), '-'))) %>%
+  arrange(Year) -> dung
+
+dung %>% kable(format = "latex", booktabs = T, align = 'r',caption = 'Dungeness crab CPUE (crab/nmi) in the Southern Distric trawl survey, 1990 to 2017.') %>% 
+kable_styling() %>%
+add_header_above(c(" " = 2, "Sublegal" = 2, "Legal" = 2, "Total" = 2, "Total" = 2 )) %>%
+add_header_above(c(" " = 2, "Males" = 6, "Females" = 2)) 
 ```
 
 ![Tomcod, sablefish, and pollock CPUE (kg/nmi) in the Southern District trawl survey, 1998-2017.  Error bars are standard errors.](../figs/tomSablePollock_T04CPUE_SE_98to17.png)

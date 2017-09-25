@@ -52,24 +52,20 @@ read.csv('./data/C_17_170921.csv') %>%
   right_join(event, by = c('EVENT_ID' = 'Event')) %>% # limited to good tows at top
   filter (YEAR == 2017) %>% transmute(
     Station = STATION_ID,
-    Pre4 = MT10_T, 
-    Pre3 = MT9_T,
-    Pre2_n = MT7_T,
-    Pre2_o = MT8_T,
-    Pre1_n = MT5_T,
-    Pre1_o = MT6_T,
-    Recruit_n = MT1_T,
-    Recruit_o =  MT2_T,
-    Postrecruit_n = MT3_T,
-    Postrecruit_o = MT4_T,
+    'Pre4' = MT10_T, 
+    'Pre3' = MT9_T,
+    'Pre2' = MT7_T + MT8_T,
+    'Pre1' = MT5_T + MT6_T,
+    Recruit = MT1_T + MT2_T,
+    Post = MT3_T +MT4_T,
     TotMales = TM_T,
     JuvFems = FT11_T,
-    MatFems_n = FT12_T,
-    MatFems_o = FT13_T,
-    TotFems = TF_T) %>% mutate_if(is.numeric, funs(round(., 1))) -> c
+    MatFems = FT12_T +FT13_T,
+    TotFems = TF_T) %>% arrange(Station) %>%
+  mutate_if(is.numeric, funs(as.character(formatC(round(., 1),1,format = "f")))) -> c
 
 write.csv(c,'./output/2017T04_931CatchByStation_17sc.csv') 
-# previously a version of this from SQL, emailed to KG. There n and o's combined.  
+# previously a version of this from SQL, emailed to KG.  
   
 ##Plot LM ---- 
   
