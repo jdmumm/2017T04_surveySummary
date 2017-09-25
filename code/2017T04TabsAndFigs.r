@@ -8,8 +8,14 @@ library (Hmisc)
 options (scipen = 10)
 dat_17 <- read.csv('./data/qP_simp_17_170916.csv') # using new size classes from 2017 SD op-plan
 dat_old <- read.csv('./data/qP_simp_oldSCs_170916.csv')# using the old pre-2017 size classes 
-
-#Males Main ----
+events <- read.csv('./data/events.csv')
+events %>% filter (PROJECT_CODE == 'T04', GEAR_PERFORMANCE_CODE == '1') %>%
+  select( Event = EVENT_ID,
+          year = YEAR,
+          Project = PROJECT_CODE, 
+          length=TOW_LENGTH_DESIGNATED,
+          totCatch = CATCH_WEIGHT) -> event
+## Males Main ----
 
   # New Size Classes 
   m <- dat_17[dat_17$PROJECT_CODE == "T04", c(1:7,16,18,20,22,24,26)] 
@@ -35,12 +41,36 @@ dat_old <- read.csv('./data/qP_simp_oldSCs_170916.csv')# using the old pre-2017 
   m
  # write.csv(m,'./output/931PopMales_Main_old.csv')
 
-#Females Main ----
+## Females Main ----
 dat_17 %>% filter (PROJECT_CODE == 'T04') %>% select(year = YEAR, tows = n,
                     FT11_P_, FT11_P_CI_, MF_P_, MF_P_CI_, TF_P_, TF_P_CI_) -> f
   
   write.csv(f,'./output/931PopFems_Main.csv')
 
+##  Catch by Station (per Carol request)
+read.csv('./data/C_17_170921.csv') %>%
+  right_join(event, by = c('EVENT_ID' = 'Event')) %>% # limited to good tows at top
+  filter (YEAR == 2017) %>% transmute(
+    Station = STATION_ID,
+    Pre4 = MT10_T, 
+    Pre3 = MT9_T,
+    Pre2_n = MT7_T,
+    Pre2_o = MT8_T,
+    Pre1_n = MT5_T,
+    Pre1_o = MT6_T,
+    Recruit_n = MT1_T,
+    Recruit_o =  MT2_T,
+    Postrecruit_n = MT3_T,
+    Postrecruit_o = MT4_T,
+    TotMales = TM_T,
+    JuvFems = FT11_T,
+    MatFems_n = FT12_T,
+    MatFems_o = FT13_T,
+    TotFems = TF_T) %>% mutate_if(is.numeric, funs(round(., 2))) -> c
+
+write.csv(c,'./output/2017T04_931CatchByStation_17sc.csv') 
+# previously a version of this from SQL, emailed to KG. There n and o's combined.  
+  
 ##Plot LM ---- 
   
   dat <- dat_17 
