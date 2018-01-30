@@ -47,7 +47,7 @@ dat_17 %>% filter (PROJECT_CODE == 'T04') %>% select(year = YEAR, tows = n,
   
   write.csv(f,'./output/931PopFems_Main.csv')
 
-##  Catch by Station (per Carol request)
+##  Catch by Station (per Carol request) ----
 read.csv('./data/C_17_170921.csv') %>%
   right_join(event, by = c('EVENT_ID' = 'Event')) %>% # limited to good tows at top
   filter (YEAR == 2017) %>% transmute(
@@ -64,8 +64,37 @@ read.csv('./data/C_17_170921.csv') %>%
     TotFems = TF_T) %>% arrange(Station) %>%
   mutate_if(is.numeric, funs(as.character(formatC(round(., 1),1,format = "f")))) -> c
 
-write.csv(c,'./output/2017T04_931CatchByStation_17sc.csv') 
-# previously a version of this from SQL, emailed to KG.  
+  write.csv(c,'./output/2017T04_931CatchByStation_17sc.csv') 
+  # previously a version of this from SQL, emailed to KG.  
+
+## CPUE by station (per KG request 180130, not incorporated to 2017 rmd) ----
+  read.csv('./data/C_17_170921.csv') %>%  right_join(event, by = c('EVENT_ID' = 'Event')) %>% # limited to good tows at top
+    filter  (YEAR == 2017) %>% transmute(
+    Station = STATION_ID, 
+    length = length, 
+    Sublegal = (MT5_T + MT6_T + MT7_T + MT8_T + MT9_T + MT10_T)/length, 
+    Legal = LM_T/length, 
+    Tot_males = TM_T/length, 
+    Juvenile_fems = FT11_T/length, 
+    Mature_fems = (FT12_T + FT13_T)/length, 
+    Tot_fems = TF_T/length) %>% arrange (Station) -> cpm 
+  
+  write.csv(cpm ,'./output/2017T04_931CPUEByStation_17sc.csv') 
+  
+  # calc ranges and cv for KG 
+  events %>% filter (PROJECT_CODE == 'T04', YEAR == 2017, USED_IN_ESTIMATE == 'YES') %>% left_join(cpm, by= c("STATION_ID" = "Station")) %>% # exclude 139
+  group_by(YEAR) %>% summarise( n= n(),
+                                LM_mean = mean(Legal), 
+                                LM_min = min(Legal), 
+                                LM_max = max(Legal),
+                                LM_CV = (var(Legal)^.5)/LM_mean, 
+                                LM_SEM = (var(Legal)^.5)/(n^.5), 
+                                SM_mean = mean(Sublegal), 
+                                SM_min = min(Sublegal), 
+                                SM_max = max(Sublegal),
+                                SM_CV = (var(Sublegal)^.5)/SM_mean, 
+                                SM_SEM = (var(Sublegal)^.5)/(n^.5)) 
+      
   
 ##Plot LM ---- 
   
