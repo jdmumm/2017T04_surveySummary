@@ -15,6 +15,8 @@ events %>% filter (PROJECT_CODE == 'T04', GEAR_PERFORMANCE_CODE == '1') %>%
           Project = PROJECT_CODE, 
           length=TOW_LENGTH_DESIGNATED,
           totCatch = CATCH_WEIGHT) -> event
+awl <- read.csv('./data/AWLshellfish_2017T04_180201.csv')
+
 ## Males Main ----
 
   # New Size Classes 
@@ -223,3 +225,31 @@ for (i in yrs)
   -
     -      legend( x=3.8, y=3.7 , bty = 'n', legend = c('114mm CW', '140mm CW'),
                    -              lwd = c(3,3), lty = c('solid','dotted'))
+  
+# Clutch Tables ----
+awl %>% left_join (events) %>% filter (USED_IN_ESTIMATE == 'YES', YEAR == 2017, PROJECT_CODE == 'T04',
+                                       SPECIES_CODE == '931', SEX_CODE == 2, CRAB_EGG_DEVELOMENT_CODE != '3') %>%  #excluding juveniles 
+    select (EVENT_ID, num = CRAB_NUM, cw = BIOLOGICAL_WIDTH_MM,
+            full = FULLNESS_PERCENT, cc = CLUTCH_CONDITION_CODE,ed = CRAB_EGG_DEVELOMENT_CODE ) -> clutch
+
+  #freq table for each variable   
+  eyed <- table(clutch$ed)
+  full <- table(clutch$full)
+  dead <- table(clutch$cc)
+  
+  #prop tables 
+  eyed.p <- as.data.frame(round(prop.table(eyed)*100,2))
+  full.p <- as.data.frame(round(prop.table(full)*100,2))
+  dead.p <- as.data.frame(round(prop.table(dead)*100,2))
+  
+  # calc n, trouble binding to prop tables, manualy add to tables for now.  
+  eyed.n <- margin.table(eyed)
+  full.n <- margin.table(full)
+  dead.n <- margin.table(dead)
+  
+  # write
+  write_csv(eyed.p, 'output/eyed.csv') 
+  write_csv(full.p, 'output/full.csv')
+  write_csv(dead.p, 'output/dead.csv')
+
+
