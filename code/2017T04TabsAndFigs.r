@@ -252,4 +252,23 @@ awl %>% left_join (events) %>% filter (USED_IN_ESTIMATE == 'YES', YEAR == 2017, 
   write_csv(full.p, 'output/full.csv')
   write_csv(dead.p, 'output/dead.csv')
 
+# To match report table select matures rather than non 3s. 
+  awl %>% left_join (events) %>% filter (USED_IN_ESTIMATE == 'YES', YEAR == 2017, PROJECT_CODE == 'T04',
+                                         SPECIES_CODE == '931', SEX_CODE == 2, CRAB_EGG_DEVELOMENT_CODE, 
+                                         MAT_CLASS == 'MAT') %>%  #excluding juveniles 
+    select (EVENT_ID, num = CRAB_NUM, cw = BIOLOGICAL_WIDTH_MM,
+            full = FULLNESS_PERCENT, cc = CLUTCH_CONDITION_CODE,ed = CRAB_EGG_DEVELOMENT_CODE ) -> clutch
 
+clutch %>% filter(!is.na(full)) %>% mutate %>% 
+  mutate (f = ifelse(full == 0, "b",(ifelse(full >= 90, "f","p")))) -> cc# exclude nulls  
+
+table(cc$f)  
+margin.table(table(cc$f)) # n 
+100 * prop.table(table(cc$f)) -> clutch_full
+write.csv(clutch_full, './output/clutchfull_2017t04.csv')
+  
+
+
+  
+  
+  
