@@ -310,3 +310,24 @@ for (i in yrs)
     ed %>% select (Year = Row.names, n = Freq, 'Uneyed' = '1', 'Eyed' = '2', 'None or remnant eggs' ='4') -> ed
     write.csv(ed, './output/T04eggDev90to17.csv')
 
+# 931 abundance table with new and old as requested by Carol 180301.  #Code Copied from catch up report, should be improved. 
+  dat <- read.csv("./data/qP_simp_17_170916.csv")
+    dat %>% filter (PROJECT_CODE == 'T04') -> dat
+    str(dat)
+    names(dat)
+    
+    ma <- dat[c(1,2,26,27,24,25,20:23,16:19,8:15)]
+    ma
+    str(ma)
+    names(ma)
+    newNames <- c("PROJECT_CODE","YEAR", "Pre-4", "Pre-4_CI","Pre-3", "Pre-3_CI",
+                  "Pre-2n", "Pre-2n_CI", "Pre-2o", "Pre-2o_CI",
+                  "Pre-1n", "Pre-1n_CI", "Pre-1o", "Pre-1o_CI",
+                  "Rn", "Rn_CI", "Ro", "Ro_CI",
+                  "PRn", "PRn_CI", "PRo", "PRo_CI")
+    
+    cbind(names(ma), newNames) # check that classes are relabled properly. Yup
+    
+    names(ma) <- newNames
+    str(ma)
+    write.csv(ma,'./output/931PopMales_Apx_17.csv')    
