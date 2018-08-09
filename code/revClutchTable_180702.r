@@ -70,7 +70,7 @@ awl <- read.csv('./data/T04931_awlClutch_thru2017.csv') %>%
       mutate (prop = n/tot) -> byEvent 
     
     byEvent %>% group_by (year, ed) %>% summarize ( # calc mean of prop and SE by year. 
-      tows = n(), # This is only includes tows with mat fems. If no mat fems, not an obs. 
+      tows = n(), # This only includes tows with mat fems. If no mat fems, not an obs. 
       mean = mean (prop), 
       se = (var(prop)^.5)/(tows^.5)) -> ed_l
     # spread ed across cols  
@@ -95,7 +95,7 @@ awl <- read.csv('./data/T04931_awlClutch_thru2017.csv') %>%
       mutate (prop = n/tot) -> byEvent 
     
     byEvent %>% group_by (year, cc) %>% summarize ( # calc mean of prop and SE by year. 
-      tows = n(), # This is only includes tows with mat fems. If no mat fems, not an obs. 
+      tows = n(), # This only includes tows with mat fems. If no mat fems, not an obs. 
       mean = mean (prop), 
       se = (var(prop)^.5)/(tows^.5)) -> cc_l
     # spread cc across cols  
