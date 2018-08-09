@@ -66,7 +66,7 @@ awl <- read.csv('./data/T04931_awlClutch_thru2017.csv') %>%
     long$n[is.na(long$n)] <- 0  # replcae na counts with 0
     # prop by event 
     long %>% 
-      left_join (clutch %>% group_by (year, Event) %>% summarize (tot = n())) %>%  # join total obs by event 
+      left_join (ed %>% group_by (year, Event) %>% summarize (tot = n())) %>%  # join total obs by event 
       mutate (prop = n/tot) -> byEvent 
     
     byEvent %>% group_by (year, ed) %>% summarize ( # calc mean of prop and SE by year. 
@@ -91,7 +91,7 @@ awl <- read.csv('./data/T04931_awlClutch_thru2017.csv') %>%
     long$n[is.na(long$n)] <- 0  # replcae na counts with 0
     # prop by event 
     long %>% 
-      left_join (clutch %>% group_by (year, Event) %>% summarize (tot = n())) %>%  # join total obs by event 
+      left_join (cc %>% group_by (year, Event) %>% summarize (tot = n())) %>%  # join total obs by event 
       mutate (prop = n/tot) -> byEvent 
     
     byEvent %>% group_by (year, cc) %>% summarize ( # calc mean of prop and SE by year. 
