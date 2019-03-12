@@ -167,7 +167,7 @@ cpmByBinTow %>% group_by (year, cp) %>% summarize (cpm = mean(cpm)) -> cpmByBinY
 
 ggplot(cpmByBinYear, aes(x= year, y = cp, size= cpm ))+ 
   geom_point(pch = 1) + 
-  scale_x_continuous(breaks = seq(1990,2018,1)) +
+  scale_x_continuous(breaks = seq(1990,2017,1)) +
   scale_y_continuous(breaks = seq(10,200,10)) +
   #scale_size_continuous (range =c(0.001,7)) +
   scale_size (range = c(0,9), name = "Crab per nmi") +
