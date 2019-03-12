@@ -1,4 +1,7 @@
 # make bubble plots of Tannner by year and length, 190308
+# NOTE: Ideally T2s would be expanded seperatedly from T1s.  T2s are present in 2011-13.  
+# So for each event would be 2 seperate distributions to expand.  Totals would A+B and C+D.  
+
 # LOAD ----
 set.seed(15343437) 
 library (FSA)
@@ -18,10 +21,14 @@ read.csv('./data/events.csv')%>%
 read.csv('./data/awl_shellfish_190301.csv') %>% 
   filter (SPECIES_CODE == '931', SEX_CODE == 1) %>% 
   select (Event = EVENT_ID, 
-          bw = BIOLOGICAL_WIDTH_MM) -> awl 
+          bw = BIOLOGICAL_WIDTH_MM, 
+          freq = FREQUENCY) -> awl 
 read.csv('./data/C_17_170921.csv') %>% 
   select( Event = EVENT_ID,
           tm = TM_T) -> tot
+
+# expand awl recs by freq - early years 1 rec represents >1 crab
+awl %>% uncount (freq) -> awl
 
 # filter awl by used in estimate  
 awl %>% right_join (event) -> awl 
@@ -53,7 +60,7 @@ for(i in events){
     
   #expand 
   if(t > 0 & m > 1 & t - m > 1)   # conditional to prevent terminal errors 
-  {eawl <- expandLenFreq(awl.i$bw, w=5, total = t, decimals = 1) } # these are the additional, not measured crabs. 
+  {eawl <- expandLenFreq(awl.i$bw, w=5, total = t, decimals = 1) } # mb used width of .1 mm for catch up report. 
   eawl # note these are only the additional, not measured crabs.
   length(eawl) - (t - m) #compare num of expanded to tot caught minus measured.  Should = 0
   
@@ -97,22 +104,12 @@ write.csv (dat,"output/expanded931male_Lengths.csv")
   hist (~ bw , data = awl, breaks = seq(0,200,1), main  = c("measured", "all tows"), freq = T, col = 'red' )
   hist (~ bw , data = dat, breaks = seq(0,200,1), main  = c("expanded", "all tows"), freq = T, col = 'blue')
 
-  
-  
-
-
-
-
-
-
-
-
-
+#______________________________________________________________________________________________________
 
 ## bubble plot from expanded awl  ----   
 dat <-   read.csv ("output/expanded931male_Lengths.csv")
 dat$bw %>% cut_interval (width = 5, boundary = 0, labels = F, n= 40 ) -> dat$bin # bin
-dat$cp <- (dat$bin -1) *5 + 2.5
+dat$cp <- (dat$bin) *5 + 2.5
 # join tow lengths 
 dat %>% left_join (event) -> dat
 dat%>% group_by(Event, bin) %>% summarize (year = first(year),
@@ -123,9 +120,16 @@ dat%>% group_by(Event, bin) %>% summarize (year = first(year),
 
 cpmByBinTow %>% group_by (year, cp) %>% summarize (cpm = mean(cpm)) -> cpmByBinYear
 
-ggplot(cpmByBinYear, aes(x= year, y = cp, size= cpm) )+ # play around with tweaking symbology sizes, WIP
+ggplot(cpmByBinYear, aes(x= year, y = cp, size= cpm ))+ 
   geom_point(pch = 1) + 
   scale_x_continuous(breaks = seq(1990,2018,1)) +
-  scale_y_continuous(breaks = seq(10,170,10)) +
-  theme( axis.text.x = element_text(angle=90, vjust= 0)) + 
-  labs (x = 'Year', y = 'Carapace width(mm)' )  
+  scale_y_continuous(breaks = seq(10,200,10)) +
+  #scale_size_continuous (range =c(0.001,7)) +
+  scale_size (range = c(0,9), name = "Crab per nmi") +
+  theme( axis.text.x = element_text(angle=90, vjust= 0), legend.position = "right") + 
+  labs (x = 'Year', y = 'Carapace width (mm)' ) + 
+  geom_hline (aes(yintercept = 140, linetype = "solid"), show.legend = F) + 
+  geom_hline (aes(yintercept = 114, linetype = "dotted"), show.legend = F) -> bub
+
+bub %>% ggsave(file =  './figs/bubble_m931_T04.png', dpi = 300, width = 9, height = 5.5, units = "in")
+
