@@ -1,7 +1,4 @@
 # make bubble plots of Tannner by year and length, 190308
-# NOTE: Ideally T2s would be expanded seperatedly from T1s.  T2s are present in 2011-13.  
-# So for each event would be 2 seperate distributions to expand.  Totals would A+B and C+D.  
-
 # LOAD ----
 set.seed(15343437) 
 library (FSA)
