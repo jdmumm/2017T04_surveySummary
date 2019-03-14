@@ -19,30 +19,53 @@ events %>% filter (PROJECT_CODE == 'T04', GEAR_PERFORMANCE_CODE == '1') %>%
 awl <- read.csv('./data/AWLshellfish_2017T04_180201.csv')
 
 ## Males Main ----
+  #dplyr version  #note converted to dplyr (190314) after delivering the main abundance tables to KG, to facilitate composite table for WR
+  dat_17 %>% filter (PROJECT_CODE == "T04") %>% 
+    transmute(Year = YEAR,Tows = n,
+              'Pre-4' =  MT10_P_,
+              'Pre-3' =  MT9_P_,  
+              'Pre-2' = MT7_P_ + MT8_P_, 
+              'Pre-1' = MT5_P_ + MT6_P_, 
+              'LM'    = LM_P_, 'LM_CI' = LM_P_CI_,  
+              'TM'    = TM_P_, 'TM_CI' = TM_P_CI_) -> m_17
+      #write.csv(m_17,'./output/931PopMales_Main_17.csv')  #haven't writen since converting to dplyr 180314
+  dat_old %>% filter (PROJECT_CODE == "T04") %>% 
+    transmute(Year = YEAR,Tows = n,
+              'Pre-4' =  MT10_P_,
+              'Pre-3' =  MT9_P_,  
+              'Pre-2' = MT7_P_ + MT8_P_, 
+              'Pre-1' = MT5_P_ + MT6_P_, 
+              'LM'    = LM_P_, 'LM_CI' = LM_P_CI_,  
+              'TM'    = TM_P_, 'TM_CI' = TM_P_CI_) -> m_old
+      #write.csv(m_old,'./output/931PopMales_Main_old.csv') 
+  # Composite table 
+    m_17  %>% left_join (m_old %>% select (Year, LM_140 = LM, LM_140_CI = LM_CI)) %>% # join LM from old SC to abund table using new SCs 
+    select(-c(TM,TM_CI), everything())->m_comp # move totals to end 
+      write.csv(m_comp, './output/931PopMales_Main_comp.csv')  # this uses new size classes for all except LM_140. 
 
-  # New Size Classes 
-  m <- dat_17[dat_17$PROJECT_CODE == "T04", c(1:7,16,18,20,22,24,26)] 
-  #combine news and olds for P1s and P2s
-  m$P1 <- m$MT5_P_ + m$MT6_P_
-  m$P2 <- m$MT7_P_ + m$MT8_P_
-  names(m)[c(12,13)] <- c('P3','P4')      #"MT9_P_"  "MT10_P_"
-  m <- m[,-(8:11)] # remove columns with new old split
-  #reorder columns
-  m <- m[,c(1,2,3,9,8,11,10,4:7)]
-  m
-  #write.csv(m,'./output/931PopMales_Main_17.csv')
-  
-  # Old Size Classes  - samee as above, just differnt file names. 
-  m <- dat_old[dat_old$PROJECT_CODE == "T04", c(1:7,16,18,20,22,24,26)] 
-  #combine news and olds for P1s and P2s
-  m$P1 <- m$MT5_P_ + m$MT6_P_
-  m$P2 <- m$MT7_P_ + m$MT8_P_
-  names(m)[c(12,13)] <- c('P3','P4')      #"MT9_P_"  "MT10_P_"
-  m <- m[,-(8:11)] # remove columns with new old split
-  #reorder columns
-  m <- m[,c(1,2,3,9,8,11,10,4:7)]
-  m
- # write.csv(m,'./output/931PopMales_Main_old.csv')
+   #OLD VERSION used to write the main tables for KG and survey summary 
+   #  m <- dat_17[dat_17$PROJECT_CODE == "T04", c(1:7,16,18,20,22,24,26)] 
+   #  #combine news and olds for P1s and P2s
+   #  m$P1 <- m$MT5_P_ + m$MT6_P_
+   #  m$P2 <- m$MT7_P_ + m$MT8_P_
+   #  names(m)[c(12,13)] <- c('P3','P4')      #"MT9_P_"  "MT10_P_"
+   #  m <- m[,-(8:11)] # remove columns with new old split
+   #  #reorder columns
+   #  m <- m[,c(1,2,3,9,8,11,10,4:7)]
+   #  m
+   #  #write.csv(m,'./output/931PopMales_Main_17.csv')
+   #  
+   #  # Old Size Classes  - samee as above, just differnt file names. 
+   #  m <- dat_old[dat_old$PROJECT_CODE == "T04", c(1:7,16,18,20,22,24,26)] 
+   #  #combine news and olds for P1s and P2s
+   #  m$P1 <- m$MT5_P_ + m$MT6_P_
+   #  m$P2 <- m$MT7_P_ + m$MT8_P_
+   #  names(m)[c(12,13)] <- c('P3','P4')      #"MT9_P_"  "MT10_P_"
+   #  m <- m[,-(8:11)] # remove columns with new old split
+   #  #reorder columns
+   #  m <- m[,c(1,2,3,9,8,11,10,4:7)]
+   #  m
+   # # write.csv(m,'./output/931PopMales_Main_old.csv')
 
 ## Females Main ----
 dat_17 %>% filter (PROJECT_CODE == 'T04') %>% select(year = YEAR, tows = n,
